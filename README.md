@@ -89,3 +89,11 @@ export default router;
 ```
 
 Here, in server.js, we created app.use("/api/notes", notesRoutes). It means whenever a url starts with "/api/notes", we need to hit up "notesRoutes" file to see what block of code needs to be executed next based on the route and the http request method. In notesRoutes.js, there will be all the methods and teh corresponding block of codes/instructions that need to be executed for that method and url
+
+### Setting up CONTROLLERS
+
+These are the functions to be executed after a specific http request is sent to s specific url
+
+```
+router.get("/", controller);
+```
