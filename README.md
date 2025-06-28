@@ -97,3 +97,15 @@ These are the functions to be executed after a specific http request is sent to 
 ```
 router.get("/", controller);
 ```
+
+### Remodularising code structure
+
+```
+-backend
+---src/
+-----controllers/
+-------notesController.js
+-----routes/
+-------notesRoutes.js
+-----server.js
+```
