@@ -366,3 +366,19 @@ export async function deleteNote(req, res) {
   }
 }
 ```
+
+### Middleware
+
+Middleware is a function that runs in the middle between the **request** and the **response**
+![diagram](readme_img/image.png)
+
+To **Create** something, we must be having some data that is coming from the frontend. So, to access **that** data, in our **server.js**, we will use **middleware** so that the data from the frontend can be parsed by the backend and is accessible to be read by backend using :
+
+```
+app.use(express.json());
+```
+
+This will help us get access to **req.body** which we send as json from frontend
+
+> [!IMPORTANT]
+> app.use(express.json()); must be written before the routes are written in the server.js
