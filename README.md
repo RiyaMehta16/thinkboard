@@ -118,8 +118,8 @@ router.get("/", controller);
 npm install mongoose
 ```
 
-=> Create a config folder
-=> In it, create a db.js file
+=> Create a **config** folder
+=> In it, create a **db.js** file
 => Go to mongodb and create a new project
 => Get the connection string and to name the database, in the connection string where "mongodb.net/?" is present, put the database name between the "/" and "?" as follows:
 
@@ -183,4 +183,36 @@ export const connectDB = async () => {
     process.exit(1); //exit with failure
   }
 };
+```
+
+### Creating Models For Database
+
+=> To create Models, first create **models** folder and in that you create the schema and models
+=> Keep in mind that the file name must be **Singular** and should start with **Capital Letter**(eg: Note.js and not: ~~note.js~~, ~~Notes.js~~ )
+=> **Note.js**
+
+```
+import mongoose from "mongoose";
+//1- CREATE A SCHEMA
+const noteSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+    },
+    content: {
+      type: String,
+      required: true,
+    },
+    // here we could have added timestamp
+  },
+  //but mongodb by default provides "createdAt" and "updatedAt" timesta,mps by default, so we added that "timestamps : true" as a separate object to access those from mongodb
+  { timestamps: true }
+);
+//2- MODEL based off of THAT schema
+const Note = mongoose.model("Note", noteSchema);
+
+export default Note;
+//we will be using this note to interact with the Note Collection => get, create, update, delete
+
 ```
