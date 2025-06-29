@@ -109,3 +109,78 @@ router.get("/", controller);
 -------notesRoutes.js
 -----server.js
 ```
+
+> 29 June 2025
+
+### Connecting with mongodb
+
+```
+npm install mongoose
+```
+
+=> Create a config folder
+=> In it, create a db.js file
+=> Go to mongodb and create a new project
+=> Get the connection string and to name the database, in the connection string where "mongodb.net/?" is present, put the database name between the "/" and "?" as follows:
+
+```
+mongodb+srv://<db_user>:<db_password>@cluster0.abcdef.mongodb.net/database_name?retryWrites=true&w=majority&appName=Cluster0
+```
+
+=>**db.js**
+
+```
+import mongoose from "mongoose";
+export const connectDB = async () => {
+  try {
+    await mongoose.connect(
+      "mongodb+srv://<db_user>:<db_password>@cluster0.abcdef.mongodb.net/database_name?retryWrites=true&w=majority&appName=Cluster0"
+    );
+    console.log("MongoDB Connected Successfully!");
+  } catch (error) {
+    console.error("Error while connecting to mongodb, ", error);
+    process.exit(1); //exit with failure
+  }
+};
+
+```
+
+But it is **insecure** to use credentials of mongodb directly in our code. For that we use a .env file in the backend folder
+
+=>**.env**
+
+```
+MONGO_URI= "mongodb+srv://<db_user>:<db_password>@cluster0.abcdef.mongodb.net/database_name?retryWrites=true&w=majority&appName=Cluster0"
+PORT=5001
+```
+
+So, to use this we need another package called "dotenv"
+
+```
+npm i dotenv
+```
+
+Using this package, we can access the ".env" file using **"process.env.VARIABLE_NAME"** after importing dotenv and calling config() function on dotenv:
+=>**server.js**
+
+```
+import dotenv from "dotenv";
+dotenv.config();
+//everything will be accessible in all files because server.js serves as the entry point to the backend
+
+```
+
+=>**db.js**
+
+```
+import mongoose from "mongoose";
+export const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("MongoDB Connected Successfully!");
+  } catch (error) {
+    console.error("Error while connecting to mongodb, ", error);
+    process.exit(1); //exit with failure
+  }
+};
+```
