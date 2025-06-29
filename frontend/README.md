@@ -169,3 +169,21 @@ npm i -D daisyui@latest
 @import "tailwindcss";
 @plugin "daisyui";
 ```
+
+- To set-up theme in the app, in **index.css**:
+
+```
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: "valentine";
+}
+```
+
+- In either <App > you can set parent <div data-theme="valentine">...rest of app</div> or set **index.html**:
+
+```
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: "valentine";
+}
+```
