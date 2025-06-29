@@ -153,3 +153,19 @@ export default defineConfig({
 @import "tailwindcss";
 
 ```
+
+### Setting up daisyUI
+
+- Go to "https://daisyui.com/"
+- Run:
+
+```
+npm i -D daisyui@latest
+```
+
+- In **index.css**, add @plugin "daisyui";
+
+```
+@import "tailwindcss";
+@plugin "daisyui";
+```
