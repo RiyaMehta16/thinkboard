@@ -118,10 +118,10 @@ router.get("/", controller);
 npm install mongoose
 ```
 
-=> Create a **config** folder
-=> In it, create a **db.js** file
-=> Go to mongodb and create a new project
-=> Get the connection string and to name the database, in the connection string where "mongodb.net/?" is present, put the database name between the "/" and "?" as follows:
+- => Create a **config** folder
+- => In it, create a **db.js** file
+- => Go to mongodb and create a new project
+- => Get the connection string and to name the database, in the connection string where "mongodb.net/?" is present, put the database name between the "/" and "?" as follows:
 
 ```
 mongodb+srv://<db_user>:<db_password>@cluster0.abcdef.mongodb.net/database_name?retryWrites=true&w=majority&appName=Cluster0
@@ -187,9 +187,9 @@ export const connectDB = async () => {
 
 ### Creating Models For Database
 
-=> To create Models, first create **models** folder and in that you create the schema and models
-=> Keep in mind that the file name must be **Singular** and should start with **Capital Letter**(eg: Note.js and not: ~~note.js~~, ~~Notes.js~~ )
-=> **Note.js**
+- => To create Models, first create **models** folder and in that you create the schema and models
+- => Keep in mind that the file name must be **Singular** and should start with **Capital Letter**(eg: Note.js and not: ~~note.js~~, ~~Notes.js~~ )
+  => **Note.js**
 
 ```
 import mongoose from "mongoose";
