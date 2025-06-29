@@ -307,14 +307,15 @@ export async function createNote(req, res) {
 ```
 
 - To test createNote:
-  -url:http://localhost:5001/api/notes
-  -method:post
-  -in body => select raw => json(select)
-  -type in the body data in json format
-  -click send
+
+  - url:http://localhost:5001/api/notes
+  - method:post
+  - in body => select raw => json(select)
+  - type in the body data in json format
+  - click send
 
 - Example controller (updating a note):
-  - \*\*findByIdAndUpdate(req.params.id, {data_to_be_updated}, {options})
+  - **findByIdAndUpdate(req.params.id, {data_to_be_updated}, {options})**
   - **req.params.id** is used to get the id from url
   - **options** => {new:true} => returns the updated value, if it was empty object, then the document without the updated value would have been returned
   - make sure to handle edge cases, like what if id doesn't exist, or is wrong etc.
