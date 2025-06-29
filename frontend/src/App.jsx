@@ -7,6 +7,7 @@ import NoteDetailPage from "./pages/NoteDetailPage";
 const App = () => {
   return (
     <div>
+      <button className="btn  btn-primary">Click me</button>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/create" element={<CreatePage />} />
