@@ -92,7 +92,9 @@ Here, in server.js, we created app.use("/api/notes", notesRoutes). It means when
 
 ### Setting up CONTROLLERS
 
-These are the functions to be executed after a specific http request is sent to s specific url
+- =>Create a new folder **controllers**
+- => Create the controller in camelCase (ex: notesController.js)
+- => These are the functions to be executed after a specific http request is sent to a specific url:
 
 ```
 router.get("/", controller);
@@ -220,3 +222,146 @@ export default Note;
 > [!NOTE]
 > We can add timestamp in here but mongodb by default provides "createdAt" and "updatedAt" timestamps by default, so we added that "timestamps : true" as a separate object to access those from mongodb
 > { timestamps: true }
+
+### Writing Controller Functions
+
+Now that the setup for backend is almost completed, we need to work on the controllers, i.e. the functions that will get executed on calling of a specific url with a specific HTTP request.
+
+- Make controllers **async** functions because there will be **Pormises** involved
+- Add a **try & catch** block in the controllers to catch errors
+- To get all documents related to a collection, we use : **ModelName.find()**
+- To find a specific document in a collection, we use: **ModelName.find({\_id:"something"})** so some other identity key pair value
+- status(200): everything worked fine
+  status(201): something created successfully
+  status(400): Bad request error
+  status(401): Unauthorized
+  status(404): Forbidden
+  status(404): something not found
+  status(429): Too Many Requests
+  status(500): Internal Server Error
+  status(503): Service Unavailable
+
+- Example controller(getting all notes):
+
+```
+import Note from "../models/Note.js";
+export async function getAllNotes(req, res) {
+  try {
+    const notes = await Note.find().sort({ createdAt: -1 });
+    //sorting in descending order, newest first
+    res.status(200).json(notes);
+  } catch (error) {
+    console.error("Error in getAllNotes:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+```
+
+- To test the api endpoints, use **"Postman"**
+  - Create a new http request
+  - In the form, enter the url (ex: http://localhost:5001/api/notes)
+  - Select the method type (ex: put, get , post)
+  - If no request parameters, Click send
+- To **Create** something, we must be having some data that is coming from the frontend. So, to access **that** data, in our **server.js**, we will use **middleware** so that the data from the frontend can be parsed by the backend and is accessible to be read by backend using :
+
+```
+app.use(express.json());
+```
+
+but keep in mind that it must be written before the Routes i.e.:
+
+```
+import express from "express";
+import notesRoutes from "../src/routes/notesRoutes.js";
+import { connectDB } from "./config/db.js";
+import dotenv from "dotenv";
+dotenv.config();
+const PORT = process.env.PORT || 5001;
+const app = express();
+connectDB();
+//middleware
+app.use(express.json()); //<======================here
+app.use("/api/notes", notesRoutes);
+
+app.listen(PORT, () => console.log("Server started on PORT :", PORT));
+
+```
+
+- Example controller (creating a note):
+
+```
+export async function createNote(req, res) {
+  try {
+    //parsing data
+    const { title, content } = req.body;
+    //creating a new note=> we could also use {title, content} since key-value pairs are same
+    const newNote = new Note({ title: title, content: content });
+    //storing it in the database
+    await newNote.save();
+    res.status(201).json({ message: "note created successfully" });
+  } catch (error) {
+    console.error("Error in createNote controller:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+```
+
+- To test createNote:
+  -url:http://localhost:5001/api/notes
+  -method:post
+  -in body => select raw => json(select)
+  -type in the body data in json format
+  -click send
+
+- Example controller (updating a note):
+  - \*\*findByIdAndUpdate(req.params.id, {data_to_be_updated}, {options})
+  - **req.params.id** is used to get the id from url
+  - **options** => {new:true} => returns the updated value, if it was empty object, then the document without the updated value would have been returned
+  - make sure to handle edge cases, like what if id doesn't exist, or is wrong etc.
+
+```
+export async function updateNote(req, res) {
+  try {
+    //getting data from frontend and parsing it
+    const { title, content } = req.body;
+    //find the note in database and update it
+    const updatedNote = await Note.findByIdAndUpdate(
+      req.params.id,
+      {
+        title,
+        content,
+      },
+      { new: true }
+    );
+    //const note= Model.findByIdAndUpdate(req.params.id, {data_to_be_updated}); <= returns the old note
+    //const note= Model.findByIdAndUpdate(req.params.id, {data_to_be_updated}, {new:true}); <= returns the new note after updation
+    if (!updatedNote)
+      return res.status(404).json({ message: "Note not found" });
+
+    res.status(201).json(updatedNote);
+  } catch (error) {
+    console.error("Error in updateNote controller:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+```
+
+> [!IMPORTANT]
+> const note= Model.findByIdAndUpdate(req.params.id, {data_to_be_updated}); <= returns the old note </br>
+> const note= Model.findByIdAndUpdate(req.params.id, {data_to_be_updated}, {new:true}); <= returns the new note after updation
+
+- Example controller (deleting a note):
+
+```
+export async function deleteNote(req, res) {
+  try {
+    const deletedNote = await Note.findByIdAndDelete(req.params.id);
+    if (!deletedNote)
+      return res.status(404).json({ message: "Note not found" });
+    res.status(200).json({ message: "Note deleted successfully" });
+  } catch (error) {
+    console.error("Error in deleteNote controller:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+```
