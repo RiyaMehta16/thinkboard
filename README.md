@@ -382,3 +382,160 @@ This will help us get access to **req.body** which we send as json from frontend
 
 > [!IMPORTANT]
 > app.use(express.json()); must be written before the routes are written in the server.js
+
+Example:
+
+```
+//middleware
+app.use(express.json()); //<==================== this middleware parses JSON bodies
+
+app.use((req, res, next) => {
+  console.log(`req method is ${req.method} and req url is ${req.url}`);
+  next();
+});//<==================== our simple custom middleware
+```
+
+- Now if we use postman to hit the endpoint "http://localhost:5001/api/notes" with GET method; then first we will get a console log of :
+
+  - **req method is GET and req url is /api/notes**
+  - Then, the corresponding controller (**getAllNotes** in this case) will execute normally
+
+- Another example is when we are trying to post something on instagram, we send a request, the middleware runs to check if the user is authenticated or not, if they're authenticated; only then the post will be created.
+
+- Middleware is mostly used for **authentication check**
+
+### Rate Limiting
+
+![diagram](readme_img/ratelimiting.png)
+
+- To apply rate limits , we will use upstash
+
+  - url: https://upstash.com/
+  - in upstash, we will use **Redis**, which is a serverless key-value store, just like a no-sql database, but instead of collections like mongodb, we have key-value pairs
+  - In upstash > Redis > Create Database
+
+    - Give it a name
+    - Select the closest time-zone
+    - Keep everything else as it is, for the free plan, click next and then create.
+    - Get the **.env variables** from there: UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN
+    - install the package:
+
+    ```
+    npm i @upstash/ratelimit @upstash/redis
+    ```
+
+    - documentation : https://upstash.com/docs/redis/sdks/ratelimit-ts/gettingstarted#npm
+    - In the **config** folder, create **upstash.js**:
+
+    ```
+    import { Ratelimit } from "@upstash/ratelimit";
+    import { Redis } from "@upstash/redis";
+
+    import dotenv from "dotenv";
+    dotenv.config();
+    const ratelimit = new Ratelimit({
+      redis: Redis.fromEnv(),
+      //creating a ratelimiter that allows 10 requests per 20 seconds
+      limiter: Ratelimit.slidingWindow(10, "20 s"),
+    });
+
+    export default ratelimit;
+    ```
+
+    - Create src/middleware
+    - Create middleware/rateLimiter.js
+    - **rateLimiter.js**
+      - const identifier = "api";
+      - const { success } = await ratelimit.limit(identifier);
+      - we use it for "per person" to identify a user because if rate limit for user1 has reached; it shouldn't affect user2
+      - Use a constant string to limit all requests with a single ratelimit
+      - Or use a userID, apiKey or ip address for individual limits.
+      - In our code: if any user sends 100 requests per minute, services will be blocked for all the users. This is why we need an identifier to block service per user like a user_id or IP address etc.
+
+    ```
+    **rateLimiter.js**
+
+    import ratelimit from "../config/upstash.js";
+
+    const rateLimiter = async (req, res, next) => {
+      try {
+        const { success } = await ratelimit.limit("my-limit-key");
+        //const identifier = "api";
+        // const { success } = await ratelimit.limit(identifier);
+        //we use it for "per person" to identify a user because if rate limit for user1 has reached; it shouldn't affect user2
+        // Use a constant string to limit all requests with a single ratelimit
+        // Or use a userID, apiKey or ip address for individual limits.
+        if (!success) {
+          return res.status(429).json({
+            message: "Too many requests, please try again later",
+          });
+        }
+        next();
+      } catch (error) {
+        console.error("Rate Limit Error : ", error);
+        next(error);
+      }
+    };
+    export default rateLimiter;
+    ```
+
+    - Use this **ratelimiter in server.js** before Routes:
+
+    ```
+    import express from "express";
+    import notesRoutes from "../src/routes/notesRoutes.js";
+    import { connectDB } from "./config/db.js";
+    import dotenv from "dotenv";
+    import rateLimiter from "./middleware/rateLimiter.js";
+    dotenv.config();
+    const PORT = process.env.PORT || 5001;
+    const app = express();
+
+    connectDB();
+    //middleware
+    app.use(express.json());
+    app.use(rateLimiter);
+
+
+    app.use("/api/notes", notesRoutes);
+
+    app.listen(PORT, () => console.log("Server started on PORT :", PORT));
+
+    ```
+
+    - Output in terminal:
+
+    ```
+    Server started on PORT : 5001
+    MongoDB Connected Successfully!
+    ```
+
+    - Now this states that server is started first and then db is connected which is not a good practice. Instead, connect to db first and then start the server by replacing the code with :
+
+    ```
+    import express from "express";
+    import notesRoutes from "../src/routes/notesRoutes.js";
+    import { connectDB } from "./config/db.js";
+    import dotenv from "dotenv";
+    import rateLimiter from "./middleware/rateLimiter.js";
+    dotenv.config();
+    const PORT = process.env.PORT || 5001;
+    const app = express();
+
+    //middleware
+    app.use(express.json());
+    app.use(rateLimiter);
+
+    app.use("/api/notes", notesRoutes);
+    connectDB().then(() => {
+      app.listen(PORT, () => console.log("Server started on PORT :", PORT));
+    });
+
+    ```
+
+    - Now the Output in terminal:
+
+    ```
+    MongoDB Connected Successfully!
+    Server started on PORT : 5001
+    ```
