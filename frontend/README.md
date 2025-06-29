@@ -180,3 +180,10 @@ npm i -D daisyui@latest
 ```
 
 - In either <App > you can set parent <div data-theme="valentine">...rest of app</div> or set **index.html**:
+
+```
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: "valentine";
+}
+```
