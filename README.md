@@ -539,3 +539,49 @@ app.use((req, res, next) => {
     MongoDB Connected Successfully!
     Server started on PORT : 5001
     ```
+
+### Setting up CORS
+
+- Cross-Origin Resource sharing
+- a browser security rule
+- When a website tries to get data from another website (like your frontend calling an API on different domain), the browser might block it for security reasons
+- Example:
+
+  - You've a frontend at :http://localhost:3000
+  - And an API backend at: http://api.example.com
+  - Your frontend makes a **fetch** request to get data from "http://api.example.com/users"
+  - But the browser says: _You're coming from **localhost:3000** and you're trying to access **api.example.com**, which is a different origin. I need to make sure that the API allows this_
+
+- Install **cors** to get rid of this error.
+
+```
+npm i cors
+```
+
+- In the **server.js**, add _app.use(cors{origin:"frontend_url_string"})_ in the middleware section, before the ratelimiter and parsing using _app.use(express.json())_:
+
+```
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
+import notesRoutes from "../src/routes/notesRoutes.js";
+import { connectDB } from "./config/db.js";
+import rateLimiter from "./middleware/rateLimiter.js";
+dotenv.config();
+const PORT = process.env.PORT || 5001;
+const app = express();
+
+//middleware
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+  })
+);
+app.use(express.json());
+app.use(rateLimiter);
+
+app.use("/api/notes", notesRoutes);
+connectDB().then(() => {
+  app.listen(PORT, () => console.log("Server started on PORT :", PORT));
+});
+```
