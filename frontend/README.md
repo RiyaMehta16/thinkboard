@@ -187,3 +187,76 @@ npm i -D daisyui@latest
   themes: "valentine";
 }
 ```
+
+### Setting up lucide-react
+
+For icons, we can use a package called **lucide-react** using:
+
+```
+npm i lucide-react
+```
+
+Usage:
+
+```
+import { Plus } from "lucide-react";
+const component=()=>{
+    return (
+        <Plus className="size-5" />
+    )
+}
+
+```
+
+### Setting up axios
+
+Run:
+
+```
+npm i axios
+```
+
+Using **fetch**, calling api:
+
+```
+ useEffect(() => {
+    const fetchNotes = async () => {
+      try {
+        const res = await fetch("http://localhost:5001/api/notes");
+        const data = await res.json();
+        console.log(data);
+      } catch (error) {
+        console.log("Error fetching notes:", error);
+      }
+    };
+    fetchNotes();
+  });
+```
+
+But when we use, axios, we do not need to parse json as well, it directly returns parsed json data
+
+```
+useEffect(() => {
+    const fetchNotes = async () => {
+      try {
+        const res = await axios.get("http://localhost:5001/api/notes");
+        console.log(res.data);
+      } catch (error) {
+        console.log("Error fetching notes:", error);
+      }
+    };
+    fetchNotes();
+  });
+
+```
+
+### Setting up CORS for API integration (go to thinkboard > readme.md)
+
+- Cross-Origin Resource sharing
+- a browser security rule
+- When a website tries to get data from another website (like your frontend calling an API on different domain), the browser might block it for security reasons
+- Example:
+  - You've a frontend at :http://localhost:3000
+  - And an API backend at: http://api.example.com
+  - Your frontend makes a **fetch** request to get data from "http://api.example.com/users"
+  - But the browser says: _You're coming from **localhost:3000** and you're trying to access **api.example.com**, which is a different origin. I need to make sure that the API allows this_
