@@ -1,10 +1,11 @@
 import { PenSquareIcon, Trash2Icon } from "lucide-react";
 import React from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { formatDate } from "../lib/utils";
 import handleDeleteNote from "../api/handleDeleteNote";
 
 const NoteCard = ({ note, setNotes }) => {
+  const navigate = useNavigate();
   return (
     <Link
       to={`/note/${note._id}`}
@@ -15,10 +16,13 @@ const NoteCard = ({ note, setNotes }) => {
         <p className="text-base-content/70 line-clamp-3">{note.content}</p>
         <div className="card-actions justify-between items-center mt-4">
           <span className="text-sm text-base-content/60">
-            {formatDate(note.createdAt)}
+            {formatDate(note.updatedAt)}
           </span>
           <div className="flex items-center gap-1">
-            <PenSquareIcon className="size-4" />
+            <PenSquareIcon
+              className="size-4"
+              onClick={() => navigate(`/note/${note._id}`)}
+            />
             <button
               className="btn btn-ghost btn-xs text-error z-20"
               onClick={(e) => handleDeleteNote(e, note._id, setNotes)}
