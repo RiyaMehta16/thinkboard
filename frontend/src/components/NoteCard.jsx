@@ -2,8 +2,9 @@ import { PenSquareIcon, Trash2Icon } from "lucide-react";
 import React from "react";
 import { Link } from "react-router";
 import { formatDate } from "../lib/utils";
+import handleDeleteNote from "../api/handleDeleteNote";
 
-const NoteCard = ({ note }) => {
+const NoteCard = ({ note, setNotes }) => {
   return (
     <Link
       to={`/note/${note._id}`}
@@ -18,7 +19,10 @@ const NoteCard = ({ note }) => {
           </span>
           <div className="flex items-center gap-1">
             <PenSquareIcon className="size-4" />
-            <button className="btn btn-ghost btn-xs text-error">
+            <button
+              className="btn btn-ghost btn-xs text-error z-20"
+              onClick={(e) => handleDeleteNote(e, note._id, setNotes)}
+            >
               <Trash2Icon className="size-4" />
             </button>
           </div>
