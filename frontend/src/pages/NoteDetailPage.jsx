@@ -4,7 +4,9 @@ import { Link, useNavigate } from "react-router";
 import handleGetNote from "../api/handleGetNote";
 import { useParams } from "react-router";
 import { ArrowLeftIcon, LoaderIcon, Trash2Icon } from "lucide-react";
-import handleDeleteNote from "../api/handleDeleteNote";
+
+import toast from "react-hot-toast";
+import api from "../lib/axios";
 const NoteDetailPage = () => {
   const { id } = useParams();
   // the name "id" here is based off of what we used while defining the Route, in our case we used "/notes/:id", if it was "notes/:user_id" then we would have used const { user_id } = useParams();
@@ -28,7 +30,27 @@ const NoteDetailPage = () => {
     };
     getNote();
   }, []);
-  const handleDelete = async () => {};
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    await handleUpdateNote(id, title, content, navigate);
+  };
+  const handleDelete = async (e, id) => {
+    e.preventDefault();
+    if (!window.confirm("Are you sure you want to delete this note?")) return;
+    if (!id) {
+      toast.error("Couldn't find the note");
+      return;
+    }
+    try {
+      await api.delete(`/notes/${id}`);
+      toast.success("Note has been deleted successfully!");
+      navigate("/");
+    } catch (error) {
+      toast.error("Something went wrong, note couldn't be deleted");
+      console.error(error);
+    }
+  };
   if (loading) {
     return (
       <div className="min-h-screen bg-base-200 flex items-center justify-center">
@@ -46,7 +68,7 @@ const NoteDetailPage = () => {
             </Link>
             {/*  onClick={(e) => handleDeleteNote(e, note._id, setNotes)} */}
             <button
-              onClick={(e) => handleDeleteNote(e, id, setNotes)}
+              onClick={(e) => handleDelete(e, id)}
               className="btn btn-outline btn-error mb-6"
             >
               <Trash2Icon className="size-5" /> Delete Note
@@ -54,11 +76,7 @@ const NoteDetailPage = () => {
           </div>
           <div className="">
             <div className="">
-              <form
-                onSubmit={(e) =>
-                  handleUpdateNote(e, id, title, content, navigate)
-                }
-              >
+              <form onSubmit={(e) => handleUpdate(e)}>
                 <fieldset className="fieldset bg-base-300/50 border-base-300 rounded-box border p-4">
                   <legend className="fieldset-legend ml-2 text-xl">
                     Update Note
