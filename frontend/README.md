@@ -188,6 +188,10 @@ npm i -D daisyui@latest
 }
 ```
 
+- Resources for theme and corresponding classes usage for components:
+  - https://daisyui.com/docs/colors/
+  - https://daisyui.com/docs/themes/
+
 ### Setting up lucide-react
 
 For icons, we can use a package called **lucide-react** using:
@@ -260,3 +264,21 @@ useEffect(() => {
   - And an API backend at: http://api.example.com
   - Your frontend makes a **fetch** request to get data from "http://api.example.com/users"
   - But the browser says: _You're coming from **localhost:3000** and you're trying to access **api.example.com**, which is a different origin. I need to make sure that the API allows this_
+
+### Utility Functions
+
+- For utility functions, create **src/lib**
+- In lib, create **utils.js**
+- Example function in utils.js to format dateString in mongodb's createdAt field:
+
+```
+export function formatDate(date) {
+  date = new Date(date);
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+```
