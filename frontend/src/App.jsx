@@ -7,13 +7,14 @@ import NoteDetailPage from "./pages/NoteDetailPage";
 const App = () => {
   return (
     <div className="relative h-screen w-full">
-      <div
+      {/* <div
         className="absolute inset-0 h-full w-full -z-10"
         style={{
           background:
             "radial-gradient(125% 125% at 50% 10%, #fff 65%, #f82b99 100%)",
         }}
-      ></div>
+      ></div> */}
+      <div class="absolute top-0 z-[-2] h-screen w-screen rotate-180 transform bg-white bg-[radial-gradient(60%_120%_at_50%_50%,hsla(0,0%,100%,0)_0,rgba(252,205,238,.5)_100%)]"></div>
 
       <Routes>
         <Route path="/" element={<HomePage />} />

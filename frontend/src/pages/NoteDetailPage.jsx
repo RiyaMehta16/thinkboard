@@ -1,7 +1,127 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import handleUpdateNote from "../api/handleUpdateNote";
+import { Link, useNavigate } from "react-router";
+import handleGetNote from "../api/handleGetNote";
+import { useParams } from "react-router";
+import { ArrowLeftIcon, LoaderIcon, Trash2Icon } from "lucide-react";
 
+import toast from "react-hot-toast";
+import api from "../lib/axios";
 const NoteDetailPage = () => {
-  return <div>NoteDetailPage</div>;
+  const { id } = useParams();
+  // the name "id" here is based off of what we used while defining the Route, in our case we used "/notes/:id", if it was "notes/:user_id" then we would have used const { user_id } = useParams();
+  const navigate = useNavigate();
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    const getNote = async () => {
+      setLoading(true);
+      try {
+        const res = await handleGetNote(id);
+        console.log("res.data", res.data);
+        setTitle(res.data.title);
+        setContent(res.data.content);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    getNote();
+  }, []);
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    await handleUpdateNote(id, title, content, navigate);
+  };
+  const handleDelete = async (e, id) => {
+    e.preventDefault();
+    if (!window.confirm("Are you sure you want to delete this note?")) return;
+    if (!id) {
+      toast.error("Couldn't find the note");
+      return;
+    }
+    try {
+      await api.delete(`/notes/${id}`);
+      toast.success("Note has been deleted successfully!");
+      navigate("/");
+    } catch (error) {
+      toast.error("Something went wrong, note couldn't be deleted");
+      console.error(error);
+    }
+  };
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-base-200 flex items-center justify-center">
+        <LoaderIcon className="animate-spin size-10" />
+      </div>
+    );
+  }
+  return (
+    <div className="min-h-screen bg-base-200">
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-xl mx-auto">
+          <div className="flex justify-between">
+            <Link to={"/"} className="btn btn-ghost mb-6">
+              <ArrowLeftIcon className="size-5" /> Back to Notes
+            </Link>
+            {/*  onClick={(e) => handleDeleteNote(e, note._id, setNotes)} */}
+            <button
+              onClick={(e) => handleDelete(e, id)}
+              className="btn btn-outline btn-error mb-6"
+            >
+              <Trash2Icon className="size-5" /> Delete Note
+            </button>
+          </div>
+          <div className="">
+            <div className="">
+              <form onSubmit={(e) => handleUpdate(e)}>
+                <fieldset className="fieldset bg-base-300/50 border-base-300 rounded-box border p-4">
+                  <legend className="fieldset-legend ml-2 text-xl">
+                    Update Note
+                  </legend>
+                  <div className="form-control m-4 ">
+                    <label className="floating-label min-w-fit ml-2">
+                      <span className="label-text">Title</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Note Title"
+                      className="input w-lg placeholder:pl-2 "
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                    />
+                  </div>
+                  <div className="form-control m-4 ">
+                    <label className="floating-label min-w-fit ml-2">
+                      <span className="label-text">Content</span>
+                    </label>
+                    <textarea
+                      type="text"
+                      placeholder="Write your note here..."
+                      className="textarea w-lg h-32 placeholder:pl-2 "
+                      value={content}
+                      onChange={(e) => setContent(e.target.value)}
+                    />
+                  </div>
+                  <div className="card-actions justify-center">
+                    <button
+                      className="btn btn-primary"
+                      type="submit"
+                      disabled={loading}
+                    >
+                      {loading ? "Updating..." : "Update Note"}
+                    </button>
+                  </div>
+                </fieldset>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default NoteDetailPage;
