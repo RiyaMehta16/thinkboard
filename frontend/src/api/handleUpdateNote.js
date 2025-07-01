@@ -1,8 +1,7 @@
 import toast from "react-hot-toast";
 import api from "../lib/axios";
 
-const handleUpdateNote = async (e, id, title, content, navigate) => {
-  e.preventDefault();
+const handleUpdateNote = async (id, title, content, navigate) => {
   //   if (!window.confirm("Are you sure you want save these changes?")) return;
 
   if (!title.trim() || !content.trim()) {
