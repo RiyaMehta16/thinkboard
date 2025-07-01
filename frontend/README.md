@@ -254,6 +254,31 @@ useEffect(() => {
 
 ```
 
+- We can also set up baseURL using axios by creating **axios.js** in the **lib** folder and use that to call the apis:
+
+```
+import axios from "axios";
+const api = axios.create({
+  baseURL: "http://localhost:5001/api",
+});
+export default api;
+
+```
+
+- Before setting up the **axios.js**, we were calling apis as follows:
+
+```
+const res = await axios.get("http://localhost:5001/api/notes");
+
+```
+
+- After setting up the **axios.js**, we were calling apis as follows:
+
+```
+const res = await api.get("/notes");
+
+```
+
 ### Setting up CORS for API integration (go to thinkboard > readme.md)
 
 - Cross-Origin Resource sharing
