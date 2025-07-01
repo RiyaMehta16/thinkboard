@@ -307,3 +307,20 @@ export function formatDate(date) {
 }
 
 ```
+
+### Getting radial gradients for bg
+
+- To get bg gradients like:
+
+```
+<div
+    className="absolute inset-0 h-full w-full -z-10"
+    style={{
+        background:
+        "radial-gradient(125% 125% at 50% 10%, #fff 65%, #f82b99 100%)",
+    }}
+></div>
+
+- Visit: https://bg.ibelick.com/
+
+```
