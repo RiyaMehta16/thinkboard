@@ -25,7 +25,10 @@ const NoteCard = ({ note, setNotes }) => {
             />
             <button
               className="btn btn-ghost btn-xs text-error z-20"
-              onClick={(e) => handleDeleteNote(e, note._id, setNotes)}
+              onClick={(e) => {
+                e.preventDefault();
+                handleDeleteNote({ id: note._id, setNotes });
+              }}
             >
               <Trash2Icon className="size-4" />
             </button>
