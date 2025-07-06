@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
-
+import Note from "../models/Note.js";
 // Generate JWT: // Helper function to create token
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
@@ -56,6 +56,28 @@ export const loginUser = async (req, res) => {
 
 export const getMe = async (req, res) => {
   // req.user is set by authMiddleware using token
-  const user = await User.findById(req.user.id).select("-password"); // remove password
-  res.json(user);
+  const fetchedUser = await User.findById(req.user.id).select("-password"); // remove password
+  res.json(fetchedUser);
+};
+
+export const deleteUser = async (req, res) => {
+  try {
+    const fetchedUser = await User.findById(req.user.id);
+    if (!fetchedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // 🧹 Delete all notes belonging to the user in one go
+    await Note.deleteMany({ user: req.user.id });
+
+    // 🧹 Delete the user
+    await User.findByIdAndDelete(req.user.id);
+
+    res.status(200).json({
+      message: "User and their notes deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error in deleteUser:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
 };
