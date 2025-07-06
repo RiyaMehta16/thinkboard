@@ -14,7 +14,7 @@ We define a Mongoose model for the `User`, which:
 
 ```js
 import mongoose from "mongoose";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 
 // 1. Create the schema
 const userSchema = new mongoose.Schema(
