@@ -1,7 +1,12 @@
 import React from "react";
-import { Link } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { ArrowUpRight, LogIn, Plus } from "lucide-react";
+import { handleLogout } from "../lib/utils";
 const Navbar = ({ link, linkName }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  // Check if we are on the /home route
+  const showLogout = location.pathname === "/home";
   return (
     <header className="bg-base-300 border-b border-base-content/10">
       <div className="mx-auto max-w-6xl  p-4">
@@ -21,6 +26,14 @@ const Navbar = ({ link, linkName }) => {
 
               <span>{linkName}</span>
             </Link>
+            {showLogout && (
+              <button
+                className="btn btn-ghost hover:bg-white/30 hover:border-white/0"
+                onClick={() => handleLogout(navigate)}
+              >
+                Logout
+              </button>
+            )}
           </div>
         </div>
       </div>

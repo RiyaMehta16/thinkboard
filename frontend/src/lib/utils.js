@@ -1,3 +1,4 @@
+import toast from "react-hot-toast";
 export function formatDate(date) {
   date = new Date(date);
   return date.toLocaleDateString("en-US", {
@@ -13,4 +14,13 @@ export const isValidEmail = (email) => {
 
 export const isStrongPassword = (password) => {
   return /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(password);
+};
+export const handleLogout = (navigate) => {
+  // Remove user token and any other persisted data
+  localStorage.removeItem("userToken");
+
+  toast.success("Logged out successfully!");
+
+  // Redirect to login page
+  navigate("/login");
 };

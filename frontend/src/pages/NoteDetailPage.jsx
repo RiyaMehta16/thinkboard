@@ -47,7 +47,7 @@ const NoteDetailPage = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-xl mx-auto">
           <div className="flex justify-between">
-            <Link to={"/"} className="btn btn-ghost mb-6">
+            <Link to={"/home"} className="btn btn-ghost mb-6">
               <ArrowLeftIcon className="size-5" /> Back to Notes
             </Link>
 
