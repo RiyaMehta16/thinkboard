@@ -20,6 +20,6 @@ router.post("/login", loginUser);
 // ✅ Protected using authMiddleware (token required)
 router.get("/me", authMiddleware, getMe);
 
-router.get("/:id", authMiddleware, deleteUser);
+router.delete("/:id", authMiddleware, deleteUser);
 
 export default router;
