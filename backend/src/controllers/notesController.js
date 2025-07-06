@@ -59,7 +59,7 @@ export async function deleteNote(req, res) {
     if (!fetchedNote)
       return res.status(404).json({ message: "Note not found" });
     // 🔒 Prevent access to other users' notes: comparing note's user_id with user_id in the jwt token
-    if (fetchedNote.user.toString() !== req.user._id.toString) {
+    if (fetchedNote.user.toString() !== req.user._id.toString()) {
       return res.status(401).json({ message: "Not authorized" });
     }
     await fetchedNote.deleteOne();
