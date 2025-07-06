@@ -8,14 +8,14 @@
 
 - Run:
 
-```
+```bash
 cd frontend
 npm create vite@latest .
 ```
 
 - You'll get:
 
-```
+```bash
  Need to install the following packages:
   create-vite@7.0.0
   Ok to proceed? (y) y
@@ -40,14 +40,14 @@ npm create vite@latest .
 
 ### Setting up Pages using "react-router"
 
-```
+```bash
 npm i react-router
 ```
 
 - Remove App.css, assets and other unnecessary data
 - Wrap your <App/> in <BrowserRouter> in **main.jsx**:
 
-```
+```js
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
@@ -59,7 +59,6 @@ createRoot(document.getElementById("root")).render(
     </BrowserRouter>
   </StrictMode>
 );
-
 ```
 
 - Now, Go to App.jsx and create your pages
@@ -68,40 +67,39 @@ createRoot(document.getElementById("root")).render(
   - Create your different pages => HomePage.jsx, CreatePage.jsx, NoteDetailPage.jsx etc
   - App.jsx:
 
-  ```
-    import React from "react";
-    import { Route, Routes } from "react-router";
-    import HomePage from "./pages/HomePage";
-    import CreatePage from "./pages/CreatePage";
-    import NoteDetailPage from "./pages/NoteDetailPage";
+  ```js
+  import React from "react";
+  import { Route, Routes } from "react-router";
+  import HomePage from "./pages/HomePage";
+  import CreatePage from "./pages/CreatePage";
+  import NoteDetailPage from "./pages/NoteDetailPage";
 
-    const App = () => {
+  const App = () => {
     return (
-        <div>
+      <div>
         <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/create" element={<CreatePage />} />
-            <Route path="/note/:id" element={<NoteDetailPage />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/create" element={<CreatePage />} />
+          <Route path="/note/:id" element={<NoteDetailPage />} />
         </Routes>
-        </div>
+      </div>
     );
-    };
+  };
 
-    export default App;
-
+  export default App;
   ```
 
 ### Setting up notifications using "react-hot-toast"
 
 - Run
 
-```
+```bash
 npm i react-hot-toast
 ```
 
 - Set up Toast in **main.jsx**
 
-```
+```js
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
@@ -119,7 +117,7 @@ createRoot(document.getElementById("root")).render(
 ```
 
 - Using react-hot-toast:
-  ```
+  ```js
     import toast from "react-hot-toast";
     .
     .
@@ -131,13 +129,13 @@ createRoot(document.getElementById("root")).render(
 
 - Run
 
-```
+```bash
 npm install tailwindcss @tailwindcss/vite
 ```
 
 - Add the @tailwindcss/vite plugin to your Vite configuration. (**vite.config.js**)
 
-```
+```js
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
@@ -149,7 +147,7 @@ export default defineConfig({
 
 - Add an @import to your CSS file that imports Tailwind CSS.(**index.css**)
 
-```
+```js
 @import "tailwindcss";
 
 ```
@@ -159,20 +157,20 @@ export default defineConfig({
 - Go to "https://daisyui.com/"
 - Run:
 
-```
+```bash
 npm i -D daisyui@latest
 ```
 
 - In **index.css**, add @plugin "daisyui";
 
-```
+```js
 @import "tailwindcss";
 @plugin "daisyui";
 ```
 
 - To set-up theme in the app, in **index.css**:
 
-```
+```js
 @import "tailwindcss";
 @plugin "daisyui" {
   themes: "valentine";
@@ -181,7 +179,7 @@ npm i -D daisyui@latest
 
 - In either <App > you can set parent <div data-theme="valentine">...rest of app</div> or set **index.html**:
 
-```
+```js
 @import "tailwindcss";
 @plugin "daisyui" {
   themes: "valentine";
@@ -196,87 +194,80 @@ npm i -D daisyui@latest
 
 For icons, we can use a package called **lucide-react** using:
 
-```
+```bash
 npm i lucide-react
 ```
 
 Usage:
 
-```
+```js
 import { Plus } from "lucide-react";
-const component=()=>{
-    return (
-        <Plus className="size-5" />
-    )
-}
-
+const component = () => {
+  return <Plus className="size-5" />;
+};
 ```
 
 ### Setting up axios
 
 Run:
 
-```
+```bash
 npm i axios
 ```
 
 Using **fetch**, calling api:
 
-```
- useEffect(() => {
-    const fetchNotes = async () => {
-      try {
-        const res = await fetch("http://localhost:5001/api/notes");
-        const data = await res.json();
-        console.log(data);
-      } catch (error) {
-        console.log("Error fetching notes:", error);
-      }
-    };
-    fetchNotes();
-  });
+```js
+useEffect(() => {
+  const fetchNotes = async () => {
+    try {
+      const res = await fetch("http://localhost:5001/api/notes");
+      const data = await res.json();
+      console.log(data);
+    } catch (error) {
+      console.log("Error fetching notes:", error);
+    }
+  };
+  fetchNotes();
+});
 ```
 
 But when we use, axios, we do not need to parse json as well, it directly returns parsed json data
 
-```
+```js
 useEffect(() => {
-    const fetchNotes = async () => {
-      try {
-        const res = await axios.get("http://localhost:5001/api/notes");
-        console.log(res.data);
-      } catch (error) {
-        console.log("Error fetching notes:", error);
-      }
-    };
-    fetchNotes();
-  });
-
+  const fetchNotes = async () => {
+    try {
+      const res = await axios.get("http://localhost:5001/api/notes");
+      console.log(res.data);
+    } catch (error) {
+      console.log("Error fetching notes:", error);
+    }
+  };
+  fetchNotes();
+});
 ```
 
 - We can also set up baseURL using axios by creating **axios.js** in the **lib** folder and use that to call the apis:
 
-```
+```js
 import axios from "axios";
 const api = axios.create({
   baseURL: "http://localhost:5001/api",
 });
 export default api;
-
 ```
 
 - Before setting up the **axios.js**, we were calling apis as follows:
 
-```
+```js
 const res = await axios.get("http://localhost:5001/api/notes");
-
 ```
 
 - After setting up the **axios.js**, we were calling apis as follows:
 
-```
+```js
 const res = await api.get("/notes");
-
 ```
 
 ### Setting up CORS for API integration (go to thinkboard > readme.md)
@@ -312,7 +303,7 @@ export function formatDate(date) {
 
 - To get bg gradients like:
 
-```
+```js
 <div
     className="absolute inset-0 h-full w-full -z-10"
     style={{
