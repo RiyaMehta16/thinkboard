@@ -1,12 +1,16 @@
 // lib/axios.js
 import axios from "axios";
 
+
+// in production, there's no localhost so we have to make this dynamic
+
 const BASE_URL =
   import.meta.env.MODE === "development" ? "http://localhost:5001/api" : "/api";
 
 const api = axios.create({
   baseURL: BASE_URL,
 });
+
 
 // ✅ Attach token from localStorage automatically on every request
 api.interceptors.request.use((config) => {
@@ -16,6 +20,7 @@ api.interceptors.request.use((config) => {
   }
   return config;
 });
+
 
 export default api;
 /*
