@@ -14,7 +14,7 @@ We define a Mongoose model for the `User`, which:
 
 ```js
 import mongoose from "mongoose";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 
 // 1. Create the schema
 const userSchema = new mongoose.Schema(
@@ -396,6 +396,105 @@ router.get("/me", authMiddleware, getMe);
 
 export default router;
 ```
+
+## Why do we need the /me route when /login already gives us user data?
+
+**✅ /login route — what does it do?**
+
+–It authenticates the user.
+
+–If the credentials are correct:
+
+- It sends back user info (like \_id, email, username)
+
+- And a JWT token
+
+- Example:
+
+```json
+{
+  "_id": "64f7f...",
+  "username": "riya",
+  "email": "riya@example.com",
+  "token": "eyJhbGciOiJIUzI1NiIsInR..."
+}
+```
+
+- This is used only once — when the user logs in.
+
+**✅ /me route — what does it do?**
+
+- It does not require login credentials like email/password.
+
+- Instead, it uses the JWT token you already received (from login).
+
+- It verifies the token via middleware, and returns the current logged-in user's profile.
+
+- Example response from /me:
+
+```json
+{
+  "_id": "64f7f...",
+  "username": "riya",
+  "email": "riya@example.com"
+}
+```
+
+- It gets this info by using the token you send in the headers:
+
+```http
+
+Authorization: Bearer <your-token>
+```
+
+**🤔 Why do we need /me?**
+Because:
+
+_✅ 1. Frontend can rebuild session on page refresh_
+
+- Imagine the user refreshes the page.
+
+- You already stored the token in localStorage.
+
+- Now you want to know who this token belongs to.
+
+- So you call /me, verify the token, and fetch that user again.
+
+- This is how apps keep users logged in between sessions.
+
+_✅ 2. It’s cleaner and more secure_
+
+- /me is useful when you don't want to:
+
+  - Expose email/password again
+
+  - Reuse login logic unnecessarily
+
+- It's token-based, and follows REST principles (who am I? → /me)
+
+_✅ 3. It’s needed for authorization checks_
+
+- Suppose you want to check user roles, settings, etc. from token
+
+- Or you just want to show Welcome, Riya! on navbar
+
+- Calling /me gives that info securely.
+
+**🧪 Summary: /login vs /me**
+| Feature | `/login` | `/me` |
+| ------------------------------ | -------- | ----- |
+| Requires password | ✅ Yes | ❌ No |
+| Used for login | ✅ Yes | ❌ No |
+| Requires token | ❌ No | ✅ Yes |
+| Used after refresh to get user | ❌ No | ✅ Yes |
+| Returns user data | ✅ Yes | ✅ Yes |
+| Used for session verification | ❌ No | ✅ Yes |
+
+- So in short:
+
+  - /login is for authenticating.
+
+  - /me is for checking "who is this token for?"
 
 - Create controllers/userController.js:
 
