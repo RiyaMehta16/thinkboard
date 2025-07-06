@@ -6,3 +6,11 @@ export function formatDate(date) {
     year: "numeric",
   });
 }
+
+export const isValidEmail = (email) => {
+  return /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email);
+};
+
+export const isStrongPassword = (password) => {
+  return /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(password);
+};
