@@ -26,7 +26,7 @@ const handleDeleteNote = async ({ id, setNotes = null, navigate = null }) => {
 
     if (navigate) {
       toast.success("Note deleted successfully!");
-      navigate("/");
+      navigate("/home");
     } else {
       toast.success("Note deleted successfully!");
     }
