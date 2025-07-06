@@ -12,6 +12,11 @@ const noteSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     // here we could have added timestamp
   },
   //but mongodb by default provides "createdAt" and "updatedAt" timesta,mps by default, so we added that "timestamps : true" as a separate object to access those from mongodb
