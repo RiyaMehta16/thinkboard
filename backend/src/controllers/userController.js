@@ -61,22 +61,23 @@ export const getMe = async (req, res) => {
 };
 
 export const deleteUser = async (req, res) => {
-  const fetchedUser = await User.findById(req.user.id);
-  if (!fetchedUser) {
-    return res.status(404).json({ message: "User not found" });
-  }
-  const fetchedNotes = await Note.find({ user: req.user.id });
-  if (fetchedNotes) {
-    for (let i = 0; i < fetchedNotes.length; i++) {
-      const noteId = fetchedNotes[i]._id;
-      const noteToBeDeleted = await Note.findById(noteId);
-      console.log(noteToBeDeleted);
-      await noteToBeDeleted.deleteOne();
+  try {
+    const fetchedUser = await User.findById(req.user.id);
+    if (!fetchedUser) {
+      return res.status(404).json({ message: "User not found" });
     }
+
+    // 🧹 Delete all notes belonging to the user in one go
+    await Note.deleteMany({ user: req.user.id });
+
+    // 🧹 Delete the user
+    await User.findByIdAndDelete(req.user.id);
+
+    res.status(200).json({
+      message: "User and their notes deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error in deleteUser:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
-  if (fetchedUser) await fetchedUser.deleteOne();
-  res
-    .status(200)
-    .json({ message: "User deleted successfully along with notes" });
-  // res.status(200).json({ fetchedUser, fetchedNotes });
 };
