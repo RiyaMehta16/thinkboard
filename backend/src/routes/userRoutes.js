@@ -3,6 +3,7 @@ import {
   registerUser,
   loginUser,
   getMe,
+  deleteUser,
 } from "../controllers/userController.js";
 
 import authMiddleware from "../middleware/authMiddleware.js";
@@ -18,5 +19,7 @@ router.post("/login", loginUser);
 // GET /api/users/me → for fetching current user's profile
 // ✅ Protected using authMiddleware (token required)
 router.get("/me", authMiddleware, getMe);
+
+router.get("/:id", authMiddleware, deleteUser);
 
 export default router;

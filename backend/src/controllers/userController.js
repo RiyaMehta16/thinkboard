@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
-
+import Note from "../models/Note.js";
 // Generate JWT: // Helper function to create token
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
@@ -56,6 +56,27 @@ export const loginUser = async (req, res) => {
 
 export const getMe = async (req, res) => {
   // req.user is set by authMiddleware using token
-  const user = await User.findById(req.user.id).select("-password"); // remove password
-  res.json(user);
+  const fetchedUser = await User.findById(req.user.id).select("-password"); // remove password
+  res.json(fetchedUser);
+};
+
+export const deleteUser = async (req, res) => {
+  const fetchedUser = await User.findById(req.user.id);
+  if (!fetchedUser) {
+    return res.status(404).json({ message: "User not found" });
+  }
+  const fetchedNotes = await Note.find({ user: req.user.id });
+  if (fetchedNotes) {
+    for (let i = 0; i < fetchedNotes.length; i++) {
+      const noteId = fetchedNotes[i]._id;
+      const noteToBeDeleted = await Note.findById(noteId);
+      console.log(noteToBeDeleted);
+      await noteToBeDeleted.deleteOne();
+    }
+  }
+  if (fetchedUser) await fetchedUser.deleteOne();
+  res
+    .status(200)
+    .json({ message: "User deleted successfully along with notes" });
+  // res.status(200).json({ fetchedUser, fetchedNotes });
 };
