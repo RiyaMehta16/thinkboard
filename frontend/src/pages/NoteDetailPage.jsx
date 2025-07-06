@@ -4,10 +4,8 @@ import { Link, useNavigate } from "react-router";
 import handleGetNote from "../api/handleGetNote";
 import { useParams } from "react-router";
 import { ArrowLeftIcon, LoaderIcon, Trash2Icon } from "lucide-react";
-
-import toast from "react-hot-toast";
-import api from "../lib/axios";
 import handleDeleteNote from "../api/handleDeleteNote";
+
 const NoteDetailPage = () => {
   const { id } = useParams();
   // the name "id" here is based off of what we used while defining the Route, in our case we used "/notes/:id", if it was "notes/:user_id" then we would have used const { user_id } = useParams();
