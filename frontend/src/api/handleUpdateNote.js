@@ -10,7 +10,7 @@ const handleUpdateNote = async (id, title, content, navigate) => {
   }
   try {
     await api.put(`/notes/${id}`, { title, content });
-    navigate("/");
+    navigate("/home");
   } catch (error) {
     toast.error("Unable to update note. Please try again later.");
     console.log("error while updating note...", error);
