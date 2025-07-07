@@ -3,11 +3,12 @@ import React from "react";
 import { useNavigate } from "react-router";
 
 const Dropdown = ({ dropdownLinks }) => {
+  const username = localStorage.getItem("username");
   const navigate = useNavigate();
   return (
     <div className="dropdown dropdown-left">
       <div tabIndex={0} role="button" className="btn m-1">
-        <CircleUserRound className="size-5" /> username
+        <CircleUserRound className="size-5" /> {username}
       </div>
       <ul
         tabIndex={0}

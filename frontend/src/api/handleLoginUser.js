@@ -15,6 +15,7 @@ const handleLoginUser = async ({ email, password, setLoading, navigate }) => {
     if (res.status === 200) {
       localStorage.setItem("userToken", res.data.token);
       localStorage.setItem("userId", res.data._id);
+      localStorage.setItem("username", res.data.username);
       toast.success("Logged in successfully!");
       navigate("/home");
     } else {

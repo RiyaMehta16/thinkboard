@@ -19,6 +19,7 @@ export const handleLogout = (navigate) => {
   // Remove user token and any other persisted data
   localStorage.removeItem("userToken");
   localStorage.removeItem("userId");
+  localStorage.removeItem("username");
 
   toast.success("Logged out successfully!");
 

@@ -11,6 +11,7 @@ const handleDeleteAccount = async ({ userId, navigate }) => {
       // Remove token from localStorage
       localStorage.removeItem("userToken");
       localStorage.removeItem("userId");
+      localStorage.removeItem("username");
 
       // Redirect to login/home
       navigate("/register");
