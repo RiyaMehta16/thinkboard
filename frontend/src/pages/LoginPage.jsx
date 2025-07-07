@@ -3,10 +3,13 @@ import Navbar from "../components/Navbar";
 import handleLoginUser from "../api/handleLoginUser";
 import { useNavigate } from "react-router";
 import Loader from "../components/Loader";
+import { Eye, EyeOff } from "lucide-react";
 const LoginPage = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -44,13 +47,27 @@ const LoginPage = () => {
                   <label className="floating-label min-w-fit ml-2">
                     <span className="label-text">Password</span>
                   </label>
-                  <input
-                    type="password"
-                    placeholder="********"
-                    className="input w-lg placeholder:pl-2 "
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      placeholder="********"
+                      className="input w-full pr-10 placeholder:pl-2"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword((prev) => !prev)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                      tabIndex={-1}
+                    >
+                      {showPassword ? (
+                        <EyeOff className="size-5" />
+                      ) : (
+                        <Eye className="size-5" />
+                      )}
+                    </button>
+                  </div>
                 </div>
                 <div className="card-actions justify-center">
                   <button

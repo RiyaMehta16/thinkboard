@@ -2,11 +2,15 @@ import React, { useState } from "react";
 import Navbar from "../components/Navbar";
 import handleRegisterUser from "../api/handleRegisterUser";
 import { useNavigate } from "react-router";
+import { Eye, EyeOff } from "lucide-react";
 const RegisterPage = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const handleRegister = async (e) => {
@@ -63,25 +67,54 @@ const RegisterPage = () => {
                 <label className="floating-label min-w-fit ml-2">
                   <span className="label-text">Password</span>
                 </label>
-                <input
-                  type="password"
-                  placeholder="********"
-                  className="input w-lg placeholder:pl-2 "
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="********"
+                    className="input w-full pr-10 placeholder:pl-2"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                    tabIndex={-1}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="size-5" />
+                    ) : (
+                      <Eye className="size-5" />
+                    )}
+                  </button>
+                </div>
               </div>
               <div className="form-control m-4 ">
                 <label className="floating-label min-w-fit ml-2">
                   <span className="label-text">Confirm Password</span>
                 </label>
-                <input
-                  type="password"
-                  placeholder="********"
-                  className="input w-lg placeholder:pl-2 "
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                />
+
+                <div className="relative">
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    placeholder="********"
+                    className="input w-lg placeholder:pl-2 "
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword((prev) => !prev)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                    tabIndex={-1}
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="size-5" />
+                    ) : (
+                      <Eye className="size-5" />
+                    )}
+                  </button>
+                </div>
               </div>
               <div className="card-actions justify-center">
                 <button
