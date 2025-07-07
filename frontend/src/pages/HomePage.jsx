@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Navbar from "../components/Navbar";
 
 import RateLimitedUI from "../components/RateLimitedUI";
@@ -12,16 +12,19 @@ const HomePage = () => {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const calledOnce = useRef(false);
+
   useEffect(() => {
+    if (calledOnce.current) return;
+    calledOnce.current = true;
+
     const fetchNotes = async () => {
       try {
         const res = await api.get("/notes");
-        console.log(res.data);
         setNotes(res.data);
         setIsRateLimited(false);
       } catch (error) {
-        console.log("Error fetching notes:", error);
-        if (error.status === 429) {
+        if (error?.response?.status === 429) {
           setIsRateLimited(true);
         } else {
           toast.error("Failed to load notes");
@@ -30,8 +33,10 @@ const HomePage = () => {
         setLoading(false);
       }
     };
+
     fetchNotes();
   }, []);
+
   return (
     <div className="min-h-screen">
       <Navbar link="create" linkName="New Note" icon="Plus" />

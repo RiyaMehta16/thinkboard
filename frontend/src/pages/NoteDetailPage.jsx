@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import handleUpdateNote from "../api/handleUpdateNote";
 import { Link, useNavigate } from "react-router";
 import handleGetNote from "../api/handleGetNote";
@@ -13,12 +13,16 @@ const NoteDetailPage = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
+  const calledOnce = useRef(false);
+
   useEffect(() => {
+    if (calledOnce.current) return;
+    calledOnce.current = true;
     const getNote = async () => {
       setLoading(true);
       try {
         const res = await handleGetNote(id);
-        console.log("res.data", res.data);
+        // console.log("res.data", res.data);
         setTitle(res.data.title);
         setContent(res.data.content);
       } catch (error) {
