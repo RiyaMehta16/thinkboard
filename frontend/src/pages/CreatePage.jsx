@@ -17,6 +17,7 @@ const CreatePage = () => {
       toast.error("All fields are required!");
       return;
     }
+
     setLoading(true);
     try {
       await api.post("/notes", { title, content });
@@ -24,7 +25,7 @@ const CreatePage = () => {
       navigate("/home");
     } catch (error) {
       console.log("error while creating note:", error);
-      if (error.response.status === 429) {
+      if (error.response?.status === 429) {
         toast.error("Slow down! You're creating notes too fast!", {
           duration: 4000,
           icon: "💀",
@@ -36,61 +37,60 @@ const CreatePage = () => {
       setLoading(false);
     }
   };
+
   return (
-    <div className="min-h-screen bg-base-200">
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-xl mx-auto">
-          <Link to={"/home"} className="btn btn-ghost mb-6">
-            <ArrowLeftIcon className="size-5" /> Back to Notes
-          </Link>
-          <div className="">
-            <div className="">
-              <form onSubmit={handleSubmit}>
-                <fieldset
-                  className="fieldset bg-base-300/50 border-base-300 rounded-box border p-4"
-                  onSubmit={handleSubmit}
-                >
-                  <legend className="fieldset-legend ml-2 text-xl">
-                    Create New Note
-                  </legend>
-                  <div className="form-control m-4 ">
-                    <label className="floating-label min-w-fit ml-2">
-                      <span className="label-text">Title</span>
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Note Title"
-                      className="input w-lg placeholder:pl-2 "
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                    />
-                  </div>
-                  <div className="form-control m-4 ">
-                    <label className="floating-label min-w-fit ml-2">
-                      <span className="label-text">Content</span>
-                    </label>
-                    <textarea
-                      type="text"
-                      placeholder="Write your note here..."
-                      className="textarea w-lg h-32 placeholder:pl-2 "
-                      value={content}
-                      onChange={(e) => setContent(e.target.value)}
-                    />
-                  </div>
-                  <div className="card-actions justify-center">
-                    <button
-                      className="btn btn-primary"
-                      type="submit"
-                      disabled={loading}
-                    >
-                      {loading ? "Creating..." : "Create Note"}
-                    </button>
-                  </div>
-                </fieldset>
-              </form>
+    <div className="min-h-screen bg-base-200 px-4 py-6">
+      <div className="max-w-3xl mx-auto w-full">
+        {/* Back Button */}
+        <Link to="/home" className="btn btn-ghost mb-6 w-full sm:w-auto">
+          <ArrowLeftIcon className="size-5 mr-2" />
+          Back to Notes
+        </Link>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit}>
+          <fieldset className="fieldset bg-base-300/50 border-base-300 rounded-box border p-4">
+            <h1 className="font-bold text-center ml-2 text-xl">
+              Create New Note
+            </h1>
+            <div className="m-4">
+              <div className="form-control m-2">
+                <label className="label">
+                  <span className="label-text">Title</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="Note Title"
+                  className="input input-bordered w-full"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                />
+              </div>
+
+              <div className="form-control mx-2">
+                <label className="label">
+                  <span className="label-text">Content</span>
+                </label>
+                <textarea
+                  placeholder="Write your note here..."
+                  className="textarea textarea-bordered w-full h-32"
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                />
+              </div>
             </div>
-          </div>
-        </div>
+
+            <div className="card-actions justify-center m-4">
+              <button
+                className="btn btn-primary w-full sm:w-auto"
+                type="submit"
+                disabled={loading}
+              >
+                {loading ? "Creating..." : "Create Note"}
+              </button>
+            </div>
+          </fieldset>
+        </form>
       </div>
     </div>
   );

@@ -9,7 +9,7 @@ import DeleteAccountPage from "./pages/DeleteAccountPage";
 
 const App = () => {
   return (
-    <div className="relative h-screen w-full">
+    <div className="relative h-screen w-full max-sm:min-w-[300px]">
       {/* <div
         className="absolute inset-0 h-full w-full -z-10"
         style={{
