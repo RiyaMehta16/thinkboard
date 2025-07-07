@@ -1,10 +1,12 @@
 import React from "react";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 import { ArrowUpRight, LogIn, Plus } from "lucide-react";
 
 import Dropdown from "./Dropdown";
 import dropdownLinks from "../constants/index.js";
 const Navbar = ({ link, linkName }) => {
+  const location = useLocation();
+  const isLoggedIn = location.pathname === "/home";
   return (
     <header className="bg-base-300 border-b border-base-content/10">
       <div className="mx-auto max-w-6xl  p-4">
@@ -25,7 +27,9 @@ const Navbar = ({ link, linkName }) => {
               <span>{linkName}</span>
             </Link>
 
-            <Dropdown dropdownLinks={dropdownLinks} className="" />
+            {isLoggedIn && (
+              <Dropdown dropdownLinks={dropdownLinks} className="" />
+            )}
           </div>
         </div>
       </div>

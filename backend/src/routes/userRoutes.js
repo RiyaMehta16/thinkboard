@@ -19,7 +19,7 @@ router.post("/login", loginUser);
 // GET /api/users/me → for fetching current user's profile
 // ✅ Protected using authMiddleware (token required)
 router.get("/me", authMiddleware, getMe);
-
-router.get("/:id", authMiddleware, deleteUser);
+// /api/users/:id
+router.delete("/:id", authMiddleware, deleteUser);
 
 export default router;

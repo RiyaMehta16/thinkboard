@@ -13,8 +13,12 @@ const Dropdown = ({ dropdownLinks }) => {
         tabIndex={0}
         className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm "
       >
-        {dropdownLinks.map(({ id, path, linkName, icon: Icon }) => (
-          <div onClick={() => navigate(path)} key={id} className="">
+        {dropdownLinks.map(({ id, path, linkName, icon: Icon, onClick }) => (
+          <div
+            onClick={() => (onClick ? onClick(navigate) : navigate(path))}
+            key={id}
+            className=""
+          >
             <li>
               <a>
                 {Icon && <Icon className="size-5" />}

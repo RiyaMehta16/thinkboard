@@ -1,9 +1,10 @@
 import { Trash2Icon } from "lucide-react";
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router";
-
+import handleDeleteAccount from "../api/handleDeleteAccount";
 const Modal = () => {
   const navigate = useNavigate();
+  const userId = localStorage.getItem("userId");
   useEffect(() => {
     const modal = document.getElementById("my_modal_2");
     if (modal) {
@@ -23,7 +24,10 @@ const Modal = () => {
             All your notes will be deleted and you won't be able to retrieve
             them if you delete your account.
           </p>
-          <button className="btn btn-error">
+          <button
+            className="btn btn-error"
+            onClick={() => handleDeleteAccount({ userId, navigate })}
+          >
             <Trash2Icon className="size-5" />
             Delete my account permanently
           </button>

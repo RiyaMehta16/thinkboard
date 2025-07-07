@@ -1,11 +1,12 @@
 import { LogOut, Trash2Icon } from "lucide-react";
-
+import { handleLogout } from "../lib/utils";
 const dropdownLinks = [
   {
     id: 1,
-    path: "/logout",
+    path: "/login",
     linkName: "Logout",
     icon: LogOut,
+    onClick: handleLogout,
   },
   {
     id: 2,

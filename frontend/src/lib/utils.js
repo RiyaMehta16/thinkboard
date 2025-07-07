@@ -18,6 +18,7 @@ export const isStrongPassword = (password) => {
 export const handleLogout = (navigate) => {
   // Remove user token and any other persisted data
   localStorage.removeItem("userToken");
+  localStorage.removeItem("userId");
 
   toast.success("Logged out successfully!");
 
