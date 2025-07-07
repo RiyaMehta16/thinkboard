@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Navbar from "../components/Navbar";
 import handleLoginUser from "../api/handleLoginUser";
 import { useNavigate } from "react-router";
+import Loader from "../components/Loader";
 const LoginPage = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -15,16 +16,18 @@ const LoginPage = () => {
     setPassword("");
   };
   return (
-    <div>
+    <div className="min-h-screen bg-base-200">
       <Navbar link="register" linkName="Register" />
-      <div className="min-h-screen bg-base-200">
-        <div className="container mx-auto px-4 py-8">
-          <div className="max-w-xl mx-auto">
-            <form onSubmit={(e) => handleLogin(e)}>
+      {loading ? (
+        <Loader />
+      ) : (
+        <div className="container mx-auto px-4 py-8 ">
+          <div className="max-w-xl mx-auto ">
+            <form onSubmit={(e) => handleLogin(e)} className="">
               <fieldset className="fieldset bg-base-300/50 border-base-300 rounded-box border p-4">
-                <legend className="fieldset-legend ml-2 text-xl">
+                <h1 className="fieldset-legend  text-2xl justify-center">
                   Login to Thinkboard
-                </legend>
+                </h1>
                 <div className="form-control m-4 ">
                   <label className="floating-label min-w-fit ml-2">
                     <span className="label-text">Email</span>
@@ -62,7 +65,7 @@ const LoginPage = () => {
             </form>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
