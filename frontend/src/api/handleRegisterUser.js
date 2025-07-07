@@ -35,6 +35,9 @@ const handleRegisterUser = async ({
     // Step 3: Handle success
     if (res.status === 201) {
       localStorage.setItem("userToken", res.data.token);
+      localStorage.setItem("userId", res.data._id);
+      localStorage.setItem("username", res.data.username);
+
       toast.success("Registered successfully!");
       navigate("/home");
     } else {
